@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import Header from './components/header'
+import ScoreBoard from './components/scoreBoard';
+import GameBoard from './components/gameBoard';
 import './App.css'
 
 function App() {
@@ -36,67 +39,21 @@ function App() {
     fetchImage();
   }, []);
 
-  const gameOver = () => {
-    console.log("GAME OVER")
-    checkHighScore();
-    setScore(0);
-    setPokemon((currentPoke) =>
-      currentPoke.map((poke) => poke.clicked = false))
-  }
-
-  const checkHighScore = () => {
-    if (score > highScore) {
-      setHighScore(score)
-      setScore(0)
-    }
-  }
-
-  const shufflePokemon = (id) => {
-    const checkClick = (arr, id) => {
-      const clickedPoke = arr.find((poke) => poke.id === id)
-      if (clickedPoke.clicked === true){
-        gameOver();
-      }
-      else {
-        setPokemon((currentPoke) =>
-          currentPoke.map((poke) => poke.id === id ? poke.clicked = true : poke
-        ))
-        setScore(score + 1)
-      }
-    }
-
-    const shuffleArray = arr => {
-      const newArr = arr.slice();
-      for (let i = newArr.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-      }
-      return newArr;
-    }
-    checkClick(pokemon, id)
-    setPokemon(shuffleArray(pokemon));
-  }
-
   return (
     <>
-      <header>
-        <h1>Amphibia Memory Game</h1>
-        <p>Get points by clicking on an image but don't click on any image more than once!</p>
-      </header>
+      <Header/>
 
-      <div className="score-board">
-        <p>Score: {score}</p>
-        <p>High Score: {highScore}</p>
-      </div>
+      <ScoreBoard score={score} highScore={highScore} />
 
-      <div className="game-board">
-        {pokemon.map((poke) => (
-          <div key={poke.id} className="pokemon-item" onClick={e => shufflePokemon(poke.id)}>
-            <img src={poke.imageUrl} alt={poke.name}/>
-            <p>{poke.name}</p>
-          </div>
-        ))}
-      </div>
+      <GameBoard
+        pokemon={pokemon}
+        setPokemon={setPokemon}
+        score={score}
+        setScore={setScore}
+        highScore={highScore}
+        setHighScore={setHighScore}
+      />
+
     </>
   );
 }

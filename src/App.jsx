@@ -33,13 +33,24 @@ function App() {
     fetchImage();
   }, []);
 
+  const shufflePokemon = () => {
+    const shuffleArray = arr => {
+      const newArr = arr.slice();
+      for (let i = newArr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+      }
+      return newArr;
+    }
+    setPokemon(shuffleArray(pokemon));
+  }
 
 
   return (
     <>
       {pokemon.map((poke, index) => (
         <div key={index} className="pokemon-item">
-          <img src={poke.imageUrl} alt={poke.name} />
+          <img src={poke.imageUrl} alt={poke.name} onClick={shufflePokemon}/>
           <p>{poke.name}</p>
         </div>
       ))}

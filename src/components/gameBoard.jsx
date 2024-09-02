@@ -1,56 +1,47 @@
-function GameBoard({ pokemon, setPokemon, score, setScore, highScore, setHighScore }){
-    const checkHighScore = () => {
-        if (score > highScore) {
-          setHighScore(score);
-          setScore(0);
-        }
-    }
+import React, { useEffect, useState } from 'react'
+import BoardItem from './boardItem'
 
-    const gameOver = () => {
-    console.log("GAME OVER")
-    checkHighScore();
-    setScore(0);
-    setPokemon((currentPoke) =>
-        currentPoke.map((poke) => poke.clicked = false))
-    }
+function GameBoard({ score, setScore, highScore, setHighScore }){
+    const [pokemon, setPokemon] = useState([]);
 
-    const checkClick = (arr, id) => {
-      const clickedPoke = arr.find((poke) => poke.id === id)
-      if (clickedPoke.clicked === true){
-        gameOver();
-      }
-      else {
-        setPokemon((currentPoke) =>
-          currentPoke.map((poke) => poke.id === id ? poke.clicked = true : poke
-        ))
-        setScore(score + 1);
-      }
-    }
+    useEffect(() => {
+        const fetchImage = async() => {
+          try {
+            const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=12');
+            const data = await response.json();
 
-    const shufflePokemon = arr => {
-      const newArr = arr.slice();
-      for (let i = newArr.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-      }
-      return newArr;
-    }
+            // Fetch details for each Pokémon using their URLs
+            const pokemonData = await Promise.all(
+              data.results.map(async (pokemon) => {
+                const pokeResponse = await fetch(pokemon.url);
+                const pokeData = await pokeResponse.json();
+                return {
+                  name: pokeData.name,
+                  imageUrl: pokeData.sprites.front_default,
+                  id: crypto.randomUUID(),
+                  clicked: false,
+                };
+              })
+            );
+            setPokemon(pokemonData);
+          } catch (error) {
+            console.error('Error fetching Pokémon:', error);
+          }
+        };
 
-    const handleClick = (id) => {
-        checkClick(pokemon, id);
-        setPokemon(shufflePokemon(pokemon));
-    }
+        fetchImage();
+      }, []);
 
 
     return (
-        <div className="game-board">
-            {pokemon.map((poke) => (
-            <div key={poke.id} className="pokemon-item" onClick={e => handleClick(poke.id)}>
-                <img src={poke.imageUrl} alt={poke.name}/>
-                <p>{poke.name}</p>
-            </div>
-            ))}
-        </div>
+        <BoardItem
+            pokemon={pokemon}
+            setPokemon={setPokemon}
+            score={score}
+            setScore={setScore}
+            highScore={highScore}
+            setHighScore={setHighScore}
+        />
     )
 }
 

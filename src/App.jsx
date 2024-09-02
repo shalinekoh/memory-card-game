@@ -20,6 +20,8 @@ function App() {
             return {
               name: pokeData.name,
               imageUrl: pokeData.sprites.front_default,
+              id: crypto.randomUUID(),
+              clicked: false,
             };
           })
         );
@@ -33,7 +35,18 @@ function App() {
     fetchImage();
   }, []);
 
-  const shufflePokemon = () => {
+  const shufflePokemon = (id) => {
+    const checkClick = (arr, id) => {
+      const clickedPoke = arr.find((poke) => poke.id === id)
+      if (clickedPoke.clicked === true){
+      }
+      else {
+        setPokemon((currentPoke) =>
+          currentPoke.map((poke) => poke.id === id ? poke.clicked = true : poke
+        ))
+      }
+    }
+
     const shuffleArray = arr => {
       const newArr = arr.slice();
       for (let i = newArr.length - 1; i > 0; i--) {
@@ -42,15 +55,16 @@ function App() {
       }
       return newArr;
     }
+    checkClick(pokemon, id)
     setPokemon(shuffleArray(pokemon));
   }
 
 
   return (
     <>
-      {pokemon.map((poke, index) => (
-        <div key={index} className="pokemon-item">
-          <img src={poke.imageUrl} alt={poke.name} onClick={shufflePokemon}/>
+      {pokemon.map((poke) => (
+        <div key={poke.id} className="pokemon-item" onClick={e => shufflePokemon(poke.id)}>
+          <img src={poke.imageUrl} alt={poke.name}/>
           <p>{poke.name}</p>
         </div>
       ))}

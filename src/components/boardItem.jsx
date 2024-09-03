@@ -1,6 +1,8 @@
+import React, { useState } from 'react'
 import '../styles/gameBoard.css'
 
 function BoardItem( {pokemon, setPokemon, score, setScore, highScore, setHighScore} ) {
+
     const checkHighScore = () => {
         if (score > highScore) {
             setHighScore(score);
@@ -9,12 +11,12 @@ function BoardItem( {pokemon, setPokemon, score, setScore, highScore, setHighSco
     }
 
     const gameOver = () => {
-        console.log("GAME OVER")
         checkHighScore();
         setScore(0);
         setPokemon((currentPoke) =>
-            currentPoke.map((poke) => poke.clicked = false))
-    }
+            currentPoke.map((poke) => ({ ...poke, clicked: false }))
+            );
+    };
 
     const checkClick = (arr, id) => {
         const clickedPoke = arr.find((poke) => poke.id === id)
@@ -47,7 +49,11 @@ function BoardItem( {pokemon, setPokemon, score, setScore, highScore, setHighSco
     return (
         <div className="game-board">
             {pokemon.map((poke) => (
-            <div key={poke.id} className="pokemon-item" onClick={e => handleClick(poke.id)}>
+            <div
+                key={poke.id}
+                className='pokemon-item'
+                onClick={e => handleClick(poke.id)}
+            >
                 <img src={poke.imageUrl} alt={poke.name}/>
                 <p>{poke.name.charAt(0).toUpperCase() + poke.name.slice(1)}</p>
             </div>

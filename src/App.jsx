@@ -10,9 +10,11 @@ function App() {
 
   return (
     <div className="App">
-      <Header/>
+      <div className="header">
+        <Header/>
 
-      <ScoreBoard score={score} highScore={highScore} />
+        <ScoreBoard score={score} highScore={highScore} />
+      </div>
 
       <GameBoard
         score={score}

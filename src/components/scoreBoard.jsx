@@ -1,3 +1,4 @@
+import '../styles/scoreBoard.css'
 
 function ScoreBoard({ score, highScore }) {
     return (

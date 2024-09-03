@@ -1,3 +1,5 @@
+import '../styles/gameBoard.css'
+
 function BoardItem( {pokemon, setPokemon, score, setScore, highScore, setHighScore} ) {
     const checkHighScore = () => {
         if (score > highScore) {
@@ -47,7 +49,7 @@ function BoardItem( {pokemon, setPokemon, score, setScore, highScore, setHighSco
             {pokemon.map((poke) => (
             <div key={poke.id} className="pokemon-item" onClick={e => handleClick(poke.id)}>
                 <img src={poke.imageUrl} alt={poke.name}/>
-                <p>{poke.name}</p>
+                <p>{poke.name.charAt(0).toUpperCase() + poke.name.slice(1)}</p>
             </div>
             ))}
         </div>

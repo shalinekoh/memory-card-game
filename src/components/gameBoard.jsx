@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import BoardItem from './boardItem'
+import '../styles/gameBoard.css'
 
 function GameBoard({ score, setScore, highScore, setHighScore }){
     const [pokemon, setPokemon] = useState([]);

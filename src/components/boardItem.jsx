@@ -25,7 +25,7 @@ function BoardItem( {pokemon, setPokemon, score, setScore, highScore, setHighSco
         }
         else {
         setPokemon((currentPoke) =>
-            currentPoke.map((poke) => poke.id === id ? poke.clicked = true : poke
+            currentPoke.map((poke) => poke.id === id ? { ...poke, clicked: true} : poke
         ))
         setScore(score + 1);
         }
@@ -41,9 +41,15 @@ function BoardItem( {pokemon, setPokemon, score, setScore, highScore, setHighSco
     }
 
     const handleClick = (id) => {
-        checkClick(pokemon, id);
-        setPokemon(shufflePokemon(pokemon));
-    }
+        checkClick(currentPoke, id);
+        // we must use an updater since we are updating the state multiple times
+        // react batches the state updates, here it only gets re-render once
+        // when a callback is passed to setState, it ensures that the latest state is passed in
+        setPokemon((currentPoke) => {
+            const updatedPokemon = shufflePokemon(currentPoke);
+            return updatedPokemon;
+        });
+    };
 
 
     return (
